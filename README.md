@@ -6,7 +6,7 @@
 1. [Challenge Summary] (README.md#challenge-summary)
 2. [Details of Implementation] (README.md#details-of-implementation)
 3. [Description of Data] (README.md#description-of-data)
-4. [Description of Solution] (README.md#description-of-solution)
+4. [Description of My Solution] (README.md#description-of-my-solution)
 
 ##Challenge Summary
 
@@ -129,7 +129,7 @@ For example, the first 10 lines (including the header) of `batch_payment.txt` or
 	2016-11-02 09:49:29, 70230, 59830, 19.33, Kale Salad
 	2016-11-02 09:49:29, 63967, 3197, 38.09, Diner
 	 
-##Description of Solution
+##Description of My Solution
 * First I created a graph by treating each person as a Node and letting an edge between two nodes indicate that the two users are friends i.e they had a transaction as given in batch_input. This was implemented by reading in id1 and id2 values from batch_input, then I created a HashMap with userID's as Keys and a Person object as Value which contains information about the user like his/her userID, an adjacency list of all the friends of the user.
 
 * After constructing the graph based on batch_payment it gives the current state of the Paymo network then we process stream_input transactions and classify the transactions as trusted or unverified depending on whether they are friends(feature1) or friends of friends(feature2) or are within 4 degree of separation(feature3).
