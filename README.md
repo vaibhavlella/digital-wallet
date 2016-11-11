@@ -1,9 +1,12 @@
+#Insight Data Engineering - Coding Challenge 
+####Submitted by: Vaibhav Lella
+
 # Table of Contents
 
 1. [Challenge Summary] (README.md#challenge-summary)
 2. [Details of Implementation] (README.md#details-of-implementation)
 3. [Description of Data] (README.md#description-of-data)
-
+4. [Description of Solution] (README.md#description-of-solution)
 
 ##Challenge Summary
 
@@ -126,7 +129,25 @@ For example, the first 10 lines (including the header) of `batch_payment.txt` or
 	2016-11-02 09:49:29, 70230, 59830, 19.33, Kale Salad
 	2016-11-02 09:49:29, 63967, 3197, 38.09, Diner
 	 
+##Description of Solution
+* First I created a graph by treating each person as a Node and letting an edge between two nodes indicate that the two users are friends i.e they had a transaction as given in batch_input. This was implemented by reading in id1 and id2 values from batch_input, then I created a HashMap with userID's as Keys and a Person object as Value which contains information about the user like his/her userID, an adjacency list of all the friends of the user.
 
+* After constructing the graph based on batch_payment it gives the current state of the Paymo network then we process stream_input transactions and classify the transactions as trusted or unverified depending on whether they are friends(feature1) or friends of friends(feature2) or are within 4 degree of separation(feature3).
+####There is a bit of ambiguity in the question due to which I am assuming that once I have constructed by initial state of network by reading in batch_payment, now while classifying payments in stream_payment I am not making changes to the graph already constructed instead keeping the graph structure constant and just classifying the new stream payments. Although I can implement this in my existing code with only a few changes to make the graph dynamic while reading stream payments.  
 
+* Feature 1 i.e. to check if sender and receiver are friends is Implemented by checking if receiver is present in the friend list of sender in the HashMap.
 
+* Feature 2 i.e. to check if sender and receiver are friends of friends is Implemented by checking if the friend list of sender and the friend list of receiver have any common element.
 
+* Feature 3 i.e. to check if sender and receiver are within 4 degree of separation or not. This is implemented by using Bidirectional Breadth First Search i.e. by doing two breadth-first searches one from the source and one from the destination and when the search collide it indicates we have found a path.
+
+* Feature 4(Extra Feature) gives the activity summary of every user in the network by keeping a running count of 6 types of metrics while going through the stream_input. We have a network structure before reading the stream_input data capturing all the connections now we can have stream_input file collected for a specific time of interest to capture user activity during that time.The 6 counts stored in Person object are:
+
+   * `NumOfTransactionsToFriends`: The number of transactions in which a user sent money to his/her friends.
+   * `NumOfTransactionsToFriendsOfFriends`:The number of transactions in which a user sent money to friend of his/her friends. 
+   * `NumOfTransactionsToPeopleOutsideFourthDegree`: The number of transactions in which a user sent money to someone outside of 4th 		degree of connections this according to me is an important metric because if someone with a high value of the same i.e. is 		constantly sending money outside of 4 degree of separation this might be a fraud user some research on net showed that most of the 	   fraud users using apps like Venmo and Cash app buy things on sites like Craiglist from unknown people and
+	send money and then cancel the transaction due to which although the seller i.e. the receiver gets an in app notification 		conforming receipt of funds but the actual money is not credited in the account.
+    * `NumOfTransactionsFromFriends`: The number of transactions in which a user received money from his/her friends.
+    * `NumOfTransactionsFromFriendsOfFriends`: The number of transactions in which a user received money from his/her friends of friends.
+    * `NumOfTransactionsFromPeopleOutsideFourthDegree`: The number of transactions in which a user received money from someone outside of 	  4th degree of connections this according to me is an important metric because if someone is receiving money consistently outside 	   of 4 degree of separation this might suggest a fraud user. These metrics can be used as features to create a training data set to 	     build a classifier to classify users into fraud or not fraud.
+    
