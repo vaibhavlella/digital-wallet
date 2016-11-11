@@ -1,0 +1,3 @@
+UserID,NumOfTransactionsToFriends,NumOfTransactionsToFriendsOfFriends,NumOfTransactionsToPeopleOutsideFourthDegree,NumOfTransactionsFromFriends,NumOfTransactionsFromFriendsOfFriends,NumOfTransactionsFromPeopleOutsideFourthDegree
+49466	0	0	0	1	0	0
+6989	1	0	0	0	0	0
