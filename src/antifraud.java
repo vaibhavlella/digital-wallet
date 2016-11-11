@@ -345,15 +345,20 @@ public class antifraud {
 	/* This function returns the degree of separation of the nodes */
 	public static int findDegreeBiBFS(HashMap<Integer, Person> people,
 			int source, int destination) {
+		int count=0;
 		BFSData sourceData = new BFSData(people.get(source));
 		BFSData destData = new BFSData(people.get(destination));
 
-		while (!sourceData.isFinished() && !destData.isFinished()) {
+		while (!sourceData.isFinished() && !destData.isFinished() && count<=4) {
 			/* Searching out from source. */
 			Person collision = searchLevel(people, sourceData, destData);
+			
 			if (collision != null) {
 				return mergePaths(sourceData, destData, collision.getID())
 						.size() - 1;
+			}
+			else{
+				count++;
 			}
 
 			/* Searching out from destination. */
@@ -361,6 +366,9 @@ public class antifraud {
 			if (collision != null) {
 				return mergePaths(sourceData, destData, collision.getID())
 						.size() - 1;
+			}
+			else{
+				count++;
 			}
 		}
 		return 0;
